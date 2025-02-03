@@ -1,0 +1,27 @@
+Package: ggMarquedBezier
+Title: Labelled Bezier Segments in ggplot2
+Version: 0.0.0.9000
+Authors@R: 
+    person("Federico", "Marotta", , "federico.marotta@embl.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0174-3901"))
+Description: Draw Bézier curves, parametrized by x, y, xend, yend, angle,
+	and strength. The `angle` and `strength` aesthetics determine the
+	starting direction (relative to a straight segment), hence the
+	amount of curvature. For enhanced flexibility, you may also specify
+	`angle_end` and `strength_end` to control the angle at which the curve
+	arrives at the endpoint. Optionally, a label can be added at the
+	midpoint of the curve, aligning itself with the curve's orientation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Suggests: 
+    testthat (>= 3.0.0),
+    vdiffr (>= 1.0.8)
+Config/testthat/edition: 3
+Imports: 
+    ggforce,
+    ggplot2,
+    ggraph,
+    grid,
+    marquee,
