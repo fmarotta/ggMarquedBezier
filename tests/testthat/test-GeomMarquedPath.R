@@ -1,5 +1,9 @@
 library(ggplot2)
 
+# NOTE: use `testthat::snapshot_review()` to review failed tests.
+
+set.seed(2425)
+
 test_that("geom_marqued_bezier works with straight lines", {
 
   d_straight <- data.frame(
