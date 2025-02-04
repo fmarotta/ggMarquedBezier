@@ -1,7 +1,24 @@
-#' @importFrom ggraph geometry circle square ellipsis rectangle is.geometry
-#' @export geometry circle square ellipsis rectangle is.geometry
-NULL
+#' Exported objects from ggraph
+#'
+#' @importFrom ggraph geometry
+#' @export
+#' @rdname ggraph_exports
+#' @name geometry
+geometry
 
+#' @importFrom ggraph circle
+#' @export
+#' @rdname ggraph_exports
+#' @name geometry
+circle
+
+#' @importFrom ggraph square
+#' @export
+#' @rdname ggraph_exports
+#' @name geometry
+square
+
+#' @import ggforce
 #' @rdname stat_bezier_segment
 StatBezierSegment <- ggplot2::ggproto("StatBezierSegment", ggplot2::Stat,
   required_aes = c("x", "y", "xend", "yend"),
@@ -65,54 +82,48 @@ StatBezierSegment <- ggplot2::ggproto("StatBezierSegment", ggplot2::Stat,
   },
 )
 
-#' Create Bezier Curves between Define Points
+#' Create Bezier Curves Between Two Points
 #'
 #' This stat computes Bezier curves between specified points in a ggplot.
+#' It's parametrixed by x, y, xend, yend, like `geom_segment()`.
 #' It offers control over the curvature and style of the arcs through
-#' optional aesthetics, enhancing the visualization of paths or connections
-#' in data.
+#' optional aesthetics. Similar in spirit to `ggraph::geom_edge_bezier()`,
+#' but parametrized differently.
 #'
-#' @format An object of class \code{ggproto} inheriting from \code{Stat}.
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggforce::stat_bezier
 #'
 #' @section Aesthetics:
-#' \code{StatBezierSegment} understands the following aesthetics (required aesthetics are in bold):
-#' \itemize{
-#'   \item \strong{x}: Starting x-coordinate of the segment.
-#'   \item \strong{y}: Starting y-coordinate of the segment.
-#'   \item \strong{xend}: Ending x-coordinate of the segment.
-#'   \item \strong{yend}: Ending y-coordinate of the segment.
-#'   \item \code{angle}: Angle of the initial tangent vector relative to the segment in degrees, default is 0.
-#'   \item \code{strength}: Distance from the start point to the control point, default is half the segment length.
-#'   \item \code{angle_end}: Angle of the terminating tangent vector relative to the segment in degrees, default is the same as \code{angle}.
-#'   \item \code{strength_end}: Distance from the end point to the control point, default is the same as \code{strength}.
-#'}
+#' `stat_bezier_segment` understands the following aesthetics (required aesthetics are in bold):
+#'   - **x**: Starting x-coordinate of the segment.
+#'   - **y**: Starting y-coordinate of the segment.
+#'   - **xend**: Ending x-coordinate of the segment.
+#'   - **yend**: Ending y-coordinate of the segment.
+#'   - angle: Angle of the initial tangent vector relative to the segment in degrees, default is 0.
+#'   - strength: Distance from the start point to the control point, default is half the segment length.
+#'   - angle_end: Angle of the terminating tangent vector relative to the segment in degrees, default is the same as `angle`.
+#'   - strength_end: Distance from the end point to the control point, default is the same as `strength`.
+#'
+#' @section Computed values:
+#' The stat calculates the following values:
+#'   - x
+#'   - y
 #'
 #' @section Dropped Aesthetics:
 #' The following columns are removed from the data frame passed to the compute function:
-#' \itemize{
-#'   \item \code{xend}
-#'   \item \code{yend}
-#'   \item \code{angle}
-#'   \item \code{strength}
-#'   \item \code{angle_end}
-#'   \item \code{strength_end}
-#' }
+#'   - xend
+#'   - yend
+#'   - angle
+#'   - strength
+#'   - angle_end
+#'   - strength_end
 #'
-#' @section Extra Parameters:
-#' The following parameters can be set via \code{params}:
-#' \itemize{
-#'   \item \code{na.rm}: A logical indicating whether missing values should be removed.
-#'   \item \code{n}: The number of interpolated points to create the Bezier curve.
-#'}
-#'
-#' @section Computation:
+#' @section Details:
 #' The computation involves the following steps:
-#' \enumerate{
-#'   \item Compute the length and angle of each segment using the Euclidean distance and \code{atan2}.
-#'   \item Set the controls for the Bezier curves, either using provided values or defaults.
-#'   \item Calculate control points and define Bezier path using a custom utility to generate paths.
-#'   \item Generate a data frame comprising the interpolated path points, where one path is formed per segment.
-#'}
+#'   - Compute the length and angle of each segment using the Euclidean distance and \code{atan2}.
+#'   - Set the controls for the Bezier curves, either using provided values or defaults.
+#'   - Calculate control points and define Bezier path using a custom utility to generate paths.
+#'   - Generate a data frame comprising the interpolated path points, where one path is formed per segment.
 #'
 #' @examples
 #' \dontrun{
@@ -124,11 +135,13 @@ StatBezierSegment <- ggplot2::ggproto("StatBezierSegment", ggplot2::Stat,
 #'   yend = c(2, 3)
 #' )
 #' ggplot(data) +
-#'   geom_path(aes(x = x, y = y, group = group), stat = "BezierSegment")
+#'   geom_path(
+#'     aes(x = x, y = y, xend = xend, yend = yend),
+#'     stat = "BezierSegment"
+#'   )
 #' }
 #'
-#' @seealso \code{\link[ggforce]{getBeziers}} for details on Bezier calculations.
-#' @seealso \code{\link{geom_marqued_bezier}}.
+#' @seealso [geom_marqued_bezier()]
 #' @export
 stat_bezier_segment <- function(
   mapping = NULL, data = NULL, geom = "marqued_bezier", position = "identity",
@@ -141,6 +154,7 @@ stat_bezier_segment <- function(
   )
 }
 
+#' @import marquee
 #' @rdname geom_marqued_bezier
 GeomMarquedPath <- ggplot2::ggproto("GeomMarquedPath", ggplot2::Geom,
   required_aes = c("x", "y"),
@@ -191,7 +205,7 @@ GeomMarquedPath <- ggplot2::ggproto("GeomMarquedPath", ggplot2::Geom,
       coord,
       na.rm = na.rm
     )
-    arrow_grob <- .arrow_grobs(
+    arrow_grob <- .arrowhead_grobs(
       arrow,
       capped_data,
       panel_params,
@@ -241,43 +255,36 @@ GeomMarquedPath <- ggplot2::ggproto("GeomMarquedPath", ggplot2::Geom,
 #' automatically positioned at the midpoint of the path, following its
 #' orientation. This geometry also decouples the arrow's linestyle from the
 #' path's linestyle: in normal geom_path, the arrowhead's linetype follows
-#' the dashing or dotting of the path, which is sometimes confusing.
+#' the dashing or dotting of the path, which is sometimes ugly.
+#'
+#' @inheritParams ggplot2::layer
+#' @inheritParams ggplot2::geom_path
+#' @param show.label Logical to control whether the label should be drawn.
 #'
 #' @section Aesthetics:
-#' \code{StatBezierSegment} understands the following aesthetics (required aesthetics are in bold):
-#' \itemize{
-#'   \item \strong{x}: The x-coordinate of points defining the path (required).
-#'   \item \strong{y}: The y-coordinate of points defining the path (required).
-#'   \item \code{alpha}: Transparency level of the path.
-#'   \item \code{color}: Color of the path.
-#'   \item \code{linetype}: Line type for the path. Note that the linetype for the arrow is always solid for clarity.
-#'   \item \code{linewidth}: Line width of the path.
-#'   \item \code{label}: Text label for the midpoint of the path.
-#'   \item \code{label_alpha}: Transparency level of the label.
-#'   \item \code{label_color}: Color of the label.
-#'   \item \code{label_fill}: Fill color for the label's background.
-#'   \item \code{label_angle}: Angle of the label text, by default automatically aligned with the path direction.
-#'   \item \code{label_family}: Font family of the label text.
-#'   \item \code{label_fontface}: Font face of the label text (e.g., bold or italic).
-#'   \item \code{label_lineheight}: Line height of the label.
-#'   \item \code{label_size}: Text size for the label.
-#'   \item \code{label_hjust}: Horizontal justification of label text.
-#'   \item \code{label_vjust}: Vertical justification of label text.
-#'   \item \code{label_nudge}: Numerical value to nudge the label perpendicular to the path direction.
-#'   \item \code{label_style}: Style of the marquee label.
-#'   \item \code{label_width}: Width of the label's bounding box.
-#'   \item \code{start_cap}: Style for the start cap, similar to those in the \code{ggraph} package.
-#'   \item \code{end_cap}: Style for the end cap, similar to those in the \code{ggraph} package.
-#' }
-#'
-#' @section Parameters:
-#' Geom parameters include:
-#' \itemize{
-#'   \item \code{na.rm}: Logical indicating whether missing values should be removed.
-#'   \item \code{arrow}: Specification for arrow heads created using the \code{grid::arrow} function.
-#'   \item \code{show.label}: Logical to control whether the label should be drawn.
-#' }
-#'
+#' `geom_marqued_bezier` understands the following aesthetics (required aesthetics are in bold):
+#'   - **x**: The x-coordinate of points defining the path (required).
+#'   - **y**: The y-coordinate of points defining the path (required).
+#'   - alpha: Transparency level of the path.
+#'   - color: Color of the path.
+#'   - linetype: Line type for the path. Note that the linetype for the arrow is always solid for clarity.
+#'   - linewidth: Line width of the path.
+#'   - label: Text label for the midpoint of the path.
+#'   - label_alpha: Transparency level of the label.
+#'   - label_color: Color of the label.
+#'   - label_fill: Fill color for the label's background.
+#'   - label_angle: Angle of the label text, by default automatically aligned with the path direction.
+#'   - label_family: Font family of the label text.
+#'   - label_fontface: Font face of the label text (e.g., bold or italic).
+#'   - label_lineheight: Line height of the label.
+#'   - label_size: Text size for the label.
+#'   - label_hjust: Horizontal justification of label text.
+#'   - label_vjust: Vertical justification of label text.
+#'   - label_nudge: Numerical value to nudge the label perpendicular to the path direction.
+#'   - label_style: Style of the marquee label.
+#'   - label_width: Width of the label's bounding box.
+#'   - start_cap: Style for the start cap, similar to those in the \code{ggraph} package.
+#'   - end_cap: Style for the end cap, similar to those in the \code{ggraph} package.
 #'
 #' @return A ggplot2 layer that draws paths with enhanced features such as arrows with always solid lines and intelligently placed labels.
 #'
@@ -303,6 +310,39 @@ geom_marqued_bezier <- function(
   )
 }
 
+#' Mask Rows Based on Geometric Cap Aesthetics
+#'
+#' This function generates a logical vector mask for the rows of a data frame
+#' containing coordinates (`coords`), excluding those points that fall within
+#' the geometric areas defined by the `start_cap` and/or `end_cap` aesthetics.
+#'
+#' The function is designed to emulate the internal functionality of
+#' `ggraph::geom_edges`. Currently, it supports circular and rectangular caps.
+#' Points that lie within the specified circular radius or within the
+#' rectangular bounds will be excluded, i.e., marked as `FALSE` in the mask.
+#'
+#' @param coords A data frame containing coordinates with columns `x`, `y`,
+#' `start_cap`, `end_cap`, and `group`.
+#'
+#' @return A logical vector of the same length as the number of rows in `coords`.
+#' Each element is `TRUE` if the corresponding point is outside the `start_cap`
+#' and `end_cap`, and `FALSE` if it is within one of these caps.
+#'
+#' @details
+#' The function first checks whether the `start_cap` and `end_cap` are
+#' provided and not missing. It identifies the cap type using an internal
+#' function `ggraph:::geo_type`. Based on the cap type (`circle` or `rect`),
+#' it computes the necessary geometric checks:
+#'
+#' - For circles, it calculates the squared radius using
+#'   `grid::convertUnit(ggraph:::geo_width(cap), "npc")`, and applies the
+#'   Euclidean distance formula to exclude points within the radius.
+#'
+#' - For rectangles, it computes half the width for boundary comparison and
+#' excludes points within these bounds.
+#'
+#' @note Only `circle` and `square` cap types are supported currently.
+#' The function may be expanded in the future to support additional shapes.
 .cap_mask <- function(coords) {
   mask <- rep(TRUE, nrow(coords))
   if (!all(is.na(coords$start_cap))) {
@@ -336,7 +376,25 @@ geom_marqued_bezier <- function(
   mask
 }
 
-.arrow_grobs <- function(arrow, data, panel_params, coord, na.rm) {
+#' Disentangle Arrow's Head from Its Path
+#'
+#' The `.arrow_grobs` function creates arrowheads separately from the segment.
+#' It's useful to customize the linetype of the segment without affecting the
+#' head.
+#'
+#' @param arrow `grid::arrow()` specification.
+#' @param data, panel_params, coord, na.rm arguments to `Geom$draw_panel()`.
+#'
+#' @return A grid graphics list (`gList`) containing grob(s) that represent the arrow head(s).
+#'
+#' The function handles distinct cases for drawing arrowheads at the
+#' start ("first"), end ("last"), or both ends of the path ("both"). This
+#' is based on the `arrow$ends` parameter, with 1 representing the start, 2
+#' the end, and 3 indicating both.
+#'
+#' @details
+#' Call this function from within the `$draw_group()` method of a geom.
+.arrowhead_grobs <- function(arrow, data, panel_params, coord, na.rm) {
   if (is.null(arrow)) {
     return(grid::nullGrob())
   }

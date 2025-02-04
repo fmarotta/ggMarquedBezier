@@ -4,11 +4,9 @@
 \name{StatBezierSegment}
 \alias{StatBezierSegment}
 \alias{stat_bezier_segment}
-\title{Create Bezier Curves between Define Points}
+\title{Create Bezier Curves Between Two Points}
 \format{
 An object of class \code{StatBezierSegment} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 6.
-
-An object of class \code{ggproto} inheriting from \code{Stat}.
 }
 \usage{
 StatBezierSegment
@@ -25,24 +23,102 @@ stat_bezier_segment(
   ...
 )
 }
+\arguments{
+\item{mapping}{Set of aesthetic mappings created by \code{\link[ggplot2:aes]{aes()}}. If specified and
+\code{inherit.aes = TRUE} (the default), it is combined with the default mapping
+at the top level of the plot. You must supply \code{mapping} if there is no plot
+mapping.}
+
+\item{data}{The data to be displayed in this layer. There are three
+options:
+
+If \code{NULL}, the default, the data is inherited from the plot
+data as specified in the call to \code{\link[ggplot2:ggplot]{ggplot()}}.
+
+A \code{data.frame}, or other object, will override the plot
+data. All objects will be fortified to produce a data frame. See
+\code{\link[ggplot2:fortify]{fortify()}} for which variables will be created.
+
+A \code{function} will be called with a single argument,
+the plot data. The return value must be a \code{data.frame}, and
+will be used as the layer data. A \code{function} can be created
+from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
+
+\item{geom}{The geometric object to use to display the data for this layer.
+When using a \verb{stat_*()} function to construct a layer, the \code{geom} argument
+can be used to override the default coupling between stats and geoms. The
+\code{geom} argument accepts the following:
+\itemize{
+\item A \code{Geom} ggproto subclass, for example \code{GeomPoint}.
+\item A string naming the geom. To give the geom as a string, strip the
+function name of the \code{geom_} prefix. For example, to use \code{geom_point()},
+give the geom as \code{"point"}.
+\item For more information and other ways to specify the geom, see the
+\link[ggplot2:layer_geoms]{layer geom} documentation.
+}}
+
+\item{position}{A position adjustment to use on the data for this layer. This
+can be used in various ways, including to prevent overplotting and
+improving the display. The \code{position} argument accepts the following:
+\itemize{
+\item The result of calling a position function, such as \code{position_jitter()}.
+This method allows for passing extra arguments to the position.
+\item A string naming the position adjustment. To give the position as a
+string, strip the function name of the \code{position_} prefix. For example,
+to use \code{position_jitter()}, give the position as \code{"jitter"}.
+\item For more information and other ways to specify the position, see the
+\link[ggplot2:layer_positions]{layer position} documentation.
+}}
+
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{n}{The number of points to create for each segment}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
+}
 \description{
 This stat computes Bezier curves between specified points in a ggplot.
+It's parametrixed by x, y, xend, yend, like \code{geom_segment()}.
 It offers control over the curvature and style of the arcs through
-optional aesthetics, enhancing the visualization of paths or connections
-in data.
+optional aesthetics. Similar in spirit to \code{ggraph::geom_edge_bezier()},
+but parametrized differently.
 }
 \section{Aesthetics}{
 
-\code{StatBezierSegment} understands the following aesthetics (required aesthetics are in bold):
+\code{stat_bezier_segment} understands the following aesthetics (required aesthetics are in bold):
 \itemize{
 \item \strong{x}: Starting x-coordinate of the segment.
 \item \strong{y}: Starting y-coordinate of the segment.
 \item \strong{xend}: Ending x-coordinate of the segment.
 \item \strong{yend}: Ending y-coordinate of the segment.
-\item \code{angle}: Angle of the initial tangent vector relative to the segment in degrees, default is 0.
-\item \code{strength}: Distance from the start point to the control point, default is half the segment length.
-\item \code{angle_end}: Angle of the terminating tangent vector relative to the segment in degrees, default is the same as \code{angle}.
-\item \code{strength_end}: Distance from the end point to the control point, default is the same as \code{strength}.
+\item angle: Angle of the initial tangent vector relative to the segment in degrees, default is 0.
+\item strength: Distance from the start point to the control point, default is half the segment length.
+\item angle_end: Angle of the terminating tangent vector relative to the segment in degrees, default is the same as \code{angle}.
+\item strength_end: Distance from the end point to the control point, default is the same as \code{strength}.
+}
+}
+
+\section{Computed values}{
+
+The stat calculates the following values:
+\itemize{
+\item x
+\item y
 }
 }
 
@@ -50,28 +126,19 @@ in data.
 
 The following columns are removed from the data frame passed to the compute function:
 \itemize{
-\item \code{xend}
-\item \code{yend}
-\item \code{angle}
-\item \code{strength}
-\item \code{angle_end}
-\item \code{strength_end}
+\item xend
+\item yend
+\item angle
+\item strength
+\item angle_end
+\item strength_end
 }
 }
 
-\section{Extra Parameters}{
-
-The following parameters can be set via \code{params}:
-\itemize{
-\item \code{na.rm}: A logical indicating whether missing values should be removed.
-\item \code{n}: The number of interpolated points to create the Bezier curve.
-}
-}
-
-\section{Computation}{
+\section{Details}{
 
 The computation involves the following steps:
-\enumerate{
+\itemize{
 \item Compute the length and angle of each segment using the Euclidean distance and \code{atan2}.
 \item Set the controls for the Bezier curves, either using provided values or defaults.
 \item Calculate control points and define Bezier path using a custom utility to generate paths.
@@ -89,13 +156,14 @@ data <- data.frame(
   yend = c(2, 3)
 )
 ggplot(data) +
-  geom_path(aes(x = x, y = y, group = group), stat = "BezierSegment")
+  geom_path(
+    aes(x = x, y = y, xend = xend, yend = yend),
+    stat = "BezierSegment"
+  )
 }
 
 }
 \seealso{
-\code{\link[ggforce]{getBeziers}} for details on Bezier calculations.
-
-\code{\link{geom_marqued_bezier}}.
+\code{\link[=geom_marqued_bezier]{geom_marqued_bezier()}}
 }
 \keyword{datasets}
