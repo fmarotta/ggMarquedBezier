@@ -383,7 +383,7 @@ geom_marqued_bezier <- function(
 #' head.
 #'
 #' @param arrow `grid::arrow()` specification.
-#' @param data, panel_params, coord, na.rm arguments to `Geom$draw_panel()`.
+#' @param data,panel_params,coord,na.rm arguments to `Geom$draw_panel()`.
 #'
 #' @return A grid graphics list (`gList`) containing grob(s) that represent the arrow head(s).
 #'

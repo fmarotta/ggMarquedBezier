@@ -9,7 +9,7 @@
 \arguments{
 \item{arrow}{\code{grid::arrow()} specification.}
 
-\item{data, }{panel_params, coord, na.rm arguments to \code{Geom$draw_panel()}.}
+\item{data, panel_params, coord, na.rm}{arguments to \code{Geom$draw_panel()}.}
 }
 \value{
 A grid graphics list (\code{gList}) containing grob(s) that represent the arrow head(s).
