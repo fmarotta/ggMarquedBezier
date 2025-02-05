@@ -211,20 +211,25 @@ GeomMarquedPath <- ggplot2::ggproto("GeomMarquedPath", ggplot2::Geom,
 
     mid <- round(nrow(capped_data) / 2)
     label_data <- capped_data[mid, ]
-    label_angle <- round(
-      atan2(
-        capped_data$y[mid] - capped_data$y[mid-1],
-        capped_data$x[mid] - capped_data$x[mid-1]
-      ),
-      digits = 2
+    # atan2 returns the shortest angle between the x axis and the (x, y)
+    # vector, so it's a negative value for points in the 3rd and 4th quadrants.
+    label_angle <- atan2(
+      capped_data$y[mid] - capped_data$y[mid-1],
+      capped_data$x[mid] - capped_data$x[mid-1]
     )
+    # There are discontinuities at 90 and 270 degrees, where the orientation
+    # suddenly changes. Due to numerical instability, sometimes labels that should
+    # be 90 degrees can be flipped over to 270 degrees instead. To prevent this,
+    # we add a small tolerance that will delay the discontinuity until after we
+    # are sure that we want to flip the label.
+    label_angle_tolerance <- 0.05
     label_data$x <- label_data$x + label_data$label_nudge * cos(label_angle + pi / 2)
     label_data$y <- label_data$y + label_data$label_nudge * sin(label_angle + pi / 2)
     if (is.na(label_data$label_angle)) {
-      label_data$label_angle <- if (label_angle == round(pi / 2, digits = 2)) {
-        label_angle / pi * 180
+      label_data$label_angle <- if (abs(label_angle) >= pi / 2 + label_angle_tolerance) {
+        (label_angle + pi) / pi * 180
       } else {
-        ((90 + label_angle / pi * 180) %% 180) - 90
+        label_angle / pi * 180
       }
     }
     names(label_data) <- sub("label_", "", names(label_data))
