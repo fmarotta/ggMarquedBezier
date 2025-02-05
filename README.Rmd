@@ -61,8 +61,8 @@ d <- data.frame(
   xend = c(-3, -1, 1, 2),
   yend = c(-4, 0, 0, 3),
   angle = c(-90, -40, 30, 30),
-  # geometry(), circle(), and square() are also re-exported from ggraph for convenience
-  end_cap = ggraph::circle(c(0, 0.5, 0, 1))
+  # geometry(), circle(), and square() are re-exported from ggraph for convenience
+  end_cap = circle(c(0, 0.5, 0, 1))
 )
 
 ggplot(d) +

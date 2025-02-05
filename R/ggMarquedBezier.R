@@ -1,22 +1,13 @@
 #' Exported objects from ggraph
 #'
-#' @importFrom ggraph geometry
-#' @export
+#' Please refer to ggraph documentation.
+#'
+#' @importFrom ggraph geometry circle square
 #' @rdname ggraph_exports
 #' @name geometry
-geometry
-
-#' @importFrom ggraph circle
-#' @export
-#' @rdname ggraph_exports
-#' @name geometry
-circle
-
-#' @importFrom ggraph square
-#' @export
-#' @rdname ggraph_exports
-#' @name geometry
-square
+#' @aliases circle square
+#' @export geometry circle square
+NULL
 
 #' @import ggforce
 #' @rdname stat_bezier_segment

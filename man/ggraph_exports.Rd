@@ -2,7 +2,9 @@
 % Please edit documentation in R/ggMarquedBezier.R
 \name{geometry}
 \alias{geometry}
+\alias{circle}
+\alias{square}
 \title{Exported objects from ggraph}
 \description{
-Exported objects from ggraph
+Please refer to ggraph documentation.
 }
