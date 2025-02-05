@@ -6,22 +6,29 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-`ggMarquedBezier` provides `ggplot2` layers to draw Bézier curves
-parametrized in the same way as `geom_segment()`, i.e. with `x`, `y`,
-`xend`, `yend`, one curve per row of your data.frame.
+`ggMarquedBezier` provides `ggplot2` layers to draw quadratic Bézier
+curves parametrized in the same way as `geom_segment()`, i.e. with `x`,
+`y`, `xend`, `yend`, one curve per row of your data.frame.
 
-Key features include: \* A label can be added at the midpoint of the
-path, and it will follow the path’s orientation and angle. \* The curve
-can be customized as in `geom_path()` (color, linetype, linewidth, …),
-and the label can be customized as in `geom_marquee()` (color, fill,
-style, …). \* The arrowheads are drawn separately from the segment and
-are rendered with a solid linetype (to circumvent
-<https://github.com/tidyverse/ggplot2/issues/2442>). \* Support
-`start_cap` and `end_cap`, like `ggraph::geom_edge()`.
+Key features include:
+
+- A label can be added at the midpoint of the path, and it will follow
+  the path’s orientation and angle.
+- The curvature is controlled by `angle`, `angle_end`, `strength`, and
+  `strength_end`, where angle is the slope of the tangent vector
+  relative to the segment and strength is the distance of the control
+  point.
+- The curve can be customized as in `geom_path()` (color, linetype,
+  linewidth, …), and the label can be customized as in `geom_marquee()`
+  (color, fill, style, …).
+- The arrowheads are drawn separately from the segment and are rendered
+  with a solid linetype to circumvent [this
+  issue](https://github.com/tidyverse/ggplot2/issues/2442).
+- Support `start_cap` and `end_cap`, like `ggraph::geom_edge()`.
 
 ### Details
 
-The pacakge provides a ggplot `stat` and a `geom`. `StatBezierSegment`
+The package provides a ggplot `stat` and a `geom`. `StatBezierSegment`
 (with its constructor `stat_bezier_segment()`) is a wrapper around the
 internals of `ggforce::stat_bezier()`. It draws the Bézier curves with
 our segment-like parametrization. The transformed data can then be used
@@ -51,12 +58,13 @@ library(ggplot2)
 
 d <- data.frame(
   id = c(1, 2, 3, 4),
-  x = c(0, 0, 1, -2),
-  y = c(0, -1, 2, -2),
-  xend = c(1, -1, 2, -3),
-  yend = c(0, 0, 3, -4),
-  angle = c(30, 30, -45, -90),
-  end_cap = ggraph::circle(c(0, 0, 1, 0))
+  x = c(-2, 0, 0, 1),
+  y = c(-2, -1, 0, 2),
+  xend = c(-3, -1, 1, 2),
+  yend = c(-4, 0, 0, 3),
+  angle = c(-90, -40, 30, 30),
+  # geometry(), circle(), and square() are also re-exported from ggraph for convenience
+  end_cap = ggraph::circle(c(0, 0.5, 0, 1))
 )
 
 ggplot(d) +
@@ -69,7 +77,7 @@ ggplot(d) +
       label = id,
       angle = angle,
       end_cap = end_cap,
-      label_nudge = 0.1,
+      label_nudge = 0.2,
     ),
     arrow = arrow()
   )
