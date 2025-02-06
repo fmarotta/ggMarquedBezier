@@ -29,16 +29,5 @@ rectangular bounds will be excluded, i.e., marked as \code{FALSE} in the mask.
 The function first checks whether the \code{start_cap} and \code{end_cap} are
 provided and not missing. It identifies the cap type using an internal
 function \code{ggraph:::geo_type}. Based on the cap type (\code{circle} or \code{rect}),
-it computes the necessary geometric checks:
-\itemize{
-\item For circles, it calculates the squared radius using
-\code{grid::convertUnit(ggraph:::geo_width(cap), "npc")}, and applies the
-Euclidean distance formula to exclude points within the radius.
-\item For rectangles, it computes half the width for boundary comparison and
-excludes points within these bounds.
-}
-}
-\note{
-Only \code{circle} and \code{square} cap types are supported currently.
-The function may be expanded in the future to support additional shapes.
+it computes the necessary geometric checks.
 }

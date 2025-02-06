@@ -18,10 +18,11 @@ test_that("Labels be flipped", {
         xend = xend,
         yend = yend,
         label = round(angle, digits = 2),
-        start_cap = circle(5, "mm")
+        start_cap = ellipsis(5, 10, "mm")
       ),
       arrow = arrow()
-    )
+    ) +
+    coord_fixed()
 
   d_bomb <- data.frame(
     x = c(0, 0),

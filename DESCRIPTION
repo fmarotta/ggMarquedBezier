@@ -1,6 +1,6 @@
 Package: ggMarquedBezier
 Title: Labelled Bezier Segments in ggplot2
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Federico", "Marotta", , "federico.marotta@embl.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0174-3901"))

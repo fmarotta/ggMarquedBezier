@@ -4,6 +4,8 @@
 \alias{geometry}
 \alias{circle}
 \alias{square}
+\alias{rectangle}
+\alias{ellipsis}
 \title{Exported objects from ggraph}
 \description{
 Please refer to ggraph documentation.

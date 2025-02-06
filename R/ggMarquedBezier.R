@@ -2,11 +2,11 @@
 #'
 #' Please refer to ggraph documentation.
 #'
-#' @importFrom ggraph geometry circle square
+#' @importFrom ggraph geometry circle square rectangle ellipsis
 #' @rdname ggraph_exports
 #' @name geometry
-#' @aliases circle square
-#' @export geometry circle square
+#' @aliases circle square rectangle ellipsis
+#' @export geometry circle square rectangle ellipsis
 NULL
 
 #' @import ggforce
@@ -328,46 +328,32 @@ geom_marqued_bezier <- function(
 #' The function first checks whether the `start_cap` and `end_cap` are
 #' provided and not missing. It identifies the cap type using an internal
 #' function `ggraph:::geo_type`. Based on the cap type (`circle` or `rect`),
-#' it computes the necessary geometric checks:
-#'
-#' - For circles, it calculates the squared radius using
-#'   `grid::convertUnit(ggraph:::geo_width(cap), "npc")`, and applies the
-#'   Euclidean distance formula to exclude points within the radius.
-#'
-#' - For rectangles, it computes half the width for boundary comparison and
-#' excludes points within these bounds.
-#'
-#' @note Only `circle` and `square` cap types are supported currently.
-#' The function may be expanded in the future to support additional shapes.
+#' it computes the necessary geometric checks.
 .cap_mask <- function(coords) {
-  mask <- rep(TRUE, nrow(coords))
-  if (!all(is.na(coords$start_cap))) {
-    cap <- coords$start_cap[!duplicated(coords$group)]
-    center <- coords[1, c("x", "y"), drop = TRUE]
+  get_mask <- function(cap, center, coords) {
     captype <- ggraph:::geo_type(cap)
-    mask <- if (captype == "circle") {
-      radius <- as.numeric(grid::convertUnit(ggraph:::geo_width(cap), "npc"))
-      mask & (coords$x - center$x)^2 + (coords$y - center$y)^2 > radius^2
+    w <- as.numeric(grid::convertUnit(ggraph:::geo_width(cap), "npc")) / 2
+    h <- as.numeric(grid::convertUnit(ggraph:::geo_height(cap), "npc")) / 2
+    x <- coords$x - center$x
+    y <- coords$y - center$y
+    if (captype == "circle") {
+      h^2 * x^2 + w^2 * y^2 >= w^2 * h^2
     } else if (captype == "rect") {
-      width <- as.numeric(grid::convertUnit(ggraph:::geo_width(cap), "npc")) / 2
-      mask & (abs(coords$x - center$x) > width | abs(coords$y - center$y) > width)
+      abs(x) >= w | abs(y) >= h
     } else {
       stop("Unsupported cap type: ", captype)
     }
   }
+  mask <- rep(TRUE, nrow(coords))
+  if (!all(is.na(coords$start_cap))) {
+    cap <- coords$start_cap[!duplicated(coords$group)]
+    center <- coords[1, c("x", "y"), drop = TRUE]
+    mask <- mask & get_mask(cap, center, coords)
+  }
   if (!all(is.na(coords$end_cap))) {
     cap <- coords$end_cap[!duplicated(coords$group)]
     center <- coords[nrow(coords), c("x", "y"), drop = TRUE]
-    captype <- ggraph:::geo_type(cap)
-    mask <- if (captype == "circle") {
-      radius <- as.numeric(grid::convertUnit(ggraph:::geo_width(cap), "npc"))
-      mask & (coords$x - center$x)^2 + (coords$y - center$y)^2 > radius^2
-    } else if (captype == "rect") {
-      width <- as.numeric(grid::convertUnit(ggraph:::geo_width(cap), "npc")) / 2
-      mask & (abs(coords$x - center$x) > width | abs(coords$y - center$y) > width)
-    } else {
-      stop("Unsupported cap type: ", captype)
-    }
+    mask <- mask & get_mask(cap, center, coords)
   }
   mask
 }
